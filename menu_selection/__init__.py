@@ -1,12 +1,18 @@
 from os.path import exists, join, isdir, isfile
-from os import makedirs, listdir, getcwd
+from os import makedirs, listdir
 from download_manager import get_info, download
+from drive_manager import upload_file
+from models import Info
 from pdf_creation import generate_pdf
+from telegram_manager import send_pic
 from utils import sanitize_path
-import shutil
+
+from zip_manager import generate_zip
+
+folder_id = "1X5tM-OfwcS6en5qbQV_XeJWnQIGp767z"
 
 
-def manga_download(base_path: str):
+def manga_download(base_path: str) -> Info:
     input_url = input("insert url\n")
     info = get_info(input_url)
     print(info)
@@ -16,16 +22,14 @@ def manga_download(base_path: str):
         makedirs(path)
 
     download(info, path)
-    print("done")
+    print(f"Manga {info.title} downloaded")
+    return info
 
 
 def zip_files(base_path: str):
     folders = [elem for elem in listdir(base_path) if isdir(join(base_path, elem))]
-    print(folders)
     for elem in folders:
-        print(elem)
-        shutil.make_archive(elem, "zip", base_path, elem)
-        shutil.move(f"{getcwd()}\\{elem}.zip", join(base_path, f"{elem}.zip"))
+        generate_zip(base_path=base_path, filename=elem)
 
 
 def pdf(base_path: str):
@@ -33,6 +37,18 @@ def pdf(base_path: str):
     for folder in folders:
         images = [join(base_path, folder, elem) for elem in listdir(join(base_path, folder)) if
                   isfile(join(base_path, folder, elem))]
-        print(f"Generating PDF for {folder}")
         generate_pdf(base_path, folder, images)
-        print(f"PDF {folder} generated")
+
+
+def automate(base_path: str):
+    info = manga_download(base_path=base_path)
+    filename = info.title
+    images = [join(base_path, filename, elem) for elem in listdir(join(base_path, filename)) if
+              isfile(join(base_path, filename, elem))]
+    if info.pages > 70:
+        path_file = generate_zip(base_path=base_path, filename=filename)
+    else:
+        path_file = generate_pdf(base_path, filename, images)
+    uploaded = upload_file(path_file, folder_id)
+    if uploaded:
+        send_pic(photo_path=images[0], text=filename)

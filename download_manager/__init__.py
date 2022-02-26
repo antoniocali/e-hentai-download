@@ -4,7 +4,7 @@ from typing import Tuple, Optional
 from urllib import request
 from models import Info
 import time
-from utils import get_extension
+from utils import get_extension, sanitize_name
 from tqdm import trange
 
 headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100101 Firefox/97.0"}
@@ -18,7 +18,7 @@ def get_info(url: str) -> Info:
     page = requests.get(url=url, headers=headers)
     bs = BeautifulSoup(page.content, 'html.parser')
     first_page = bs.find("div", {"class": "gdtm"}).a['href']
-    title = bs.title.text
+    title = sanitize_name(bs.find(id="gn").text)
     tds = list(map(lambda x: x.text, bs.find(id="gdd").table.find_all('td', {"class": "gdt2"})))
     pages = int(list(filter(lambda x: "pages" in x, tds))[0].replace("pages", "").strip())
 
