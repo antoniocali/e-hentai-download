@@ -49,6 +49,6 @@ def automate(base_path: str):
         path_file = generate_zip(base_path=base_path, filename=filename)
     else:
         path_file = generate_pdf(base_path, filename, images)
-    uploaded = upload_file(path_file, folder_id)
+    uploaded = upload_file(filename=filename, local_file=path_file, folder_id=folder_id)
     if uploaded:
         send_pic(photo_path=images[0], text=filename)

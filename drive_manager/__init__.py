@@ -6,7 +6,7 @@ from pathlib import Path
 credentials = "secrets.json"
 
 
-def upload_file(local_file: str, folder_id: str) -> bool:
+def upload_file(filename: str, local_file: str, folder_id: str) -> bool:
     print(f"Uploading file {local_file}")
     try:
         gauth = GoogleAuth()
@@ -26,7 +26,7 @@ def upload_file(local_file: str, folder_id: str) -> bool:
             gauth.Authorize()
             gauth.SaveCredentialsFile(credentials)
         drive = GoogleDrive(gauth)
-        gfile = drive.CreateFile({'parents': [{'id': folder_id}]})
+        gfile = drive.CreateFile({'parents': [{'id': folder_id}], 'title': filename})
         gfile.SetContentFile(local_file)
         gfile.Upload()
         print(f"File Uploaded {local_file}")
