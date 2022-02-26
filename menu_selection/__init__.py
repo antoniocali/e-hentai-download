@@ -8,8 +8,9 @@ from telegram_manager import send_pic
 from utils import sanitize_path
 
 from zip_manager import generate_zip
+from config import settings
 
-folder_id = "1X5tM-OfwcS6en5qbQV_XeJWnQIGp767z"
+folder_id = settings.folder_id
 
 
 def manga_download(base_path: str) -> Info:

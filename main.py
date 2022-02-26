@@ -2,7 +2,9 @@ from consolemenu import *
 from consolemenu.items import *
 from menu_selection import manga_download, zip_files, pdf, automate
 
-base_path = "F:\Furry"
+from config import settings
+
+base_path = settings.base_path
 
 
 def main():
