@@ -34,7 +34,7 @@ def get_image_and_next(url: str) -> Tuple[str, Optional[str]]:
 
 
 def download_image(url: str, path: str, idx: int, ext: str):
-    request.urlretrieve(url=url, filename=f"{path}/{idx}{ext}")
+    request.urlretrieve(url=url, filename=f"{path}/{str(idx).zfill(3)}{ext}")
 
 
 def download(info: Info, path: str):

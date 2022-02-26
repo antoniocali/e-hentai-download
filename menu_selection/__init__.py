@@ -35,16 +35,16 @@ def zip_files(base_path: str):
 def pdf(base_path: str):
     folders = [elem for elem in listdir(base_path) if isdir(join(base_path, elem))]
     for folder in folders:
-        images = [join(base_path, folder, elem) for elem in listdir(join(base_path, folder)) if
-                  isfile(join(base_path, folder, elem))]
+        images = sorted([join(base_path, folder, elem) for elem in listdir(join(base_path, folder)) if
+                         isfile(join(base_path, folder, elem))])
         generate_pdf(base_path, folder, images)
 
 
 def automate(base_path: str):
     info = manga_download(base_path=base_path)
     filename = info.title
-    images = [join(base_path, filename, elem) for elem in listdir(join(base_path, filename)) if
-              isfile(join(base_path, filename, elem))]
+    images = sorted([join(base_path, filename, elem) for elem in listdir(join(base_path, filename)) if
+                     isfile(join(base_path, filename, elem))])
     if info.pages > 70:
         path_file = generate_zip(base_path=base_path, filename=filename)
     else:
