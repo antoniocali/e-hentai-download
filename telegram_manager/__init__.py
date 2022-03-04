@@ -32,7 +32,7 @@ def telegram_download(bot: Bot, base_path: str, info: Info) -> bool:
             path_file = generate_pdf(base_path, filename, images)
         uploaded = upload_file(filename=filename, local_file=path_file, folder_id=folder_id)
         if uploaded:
-            send_pic(photo_path=images[0], text=filename)
+            send_pic(photo_path=images[0], text=filename, bot=bot)
             remove(path_file)
             delete_folder(join(base_path, filename))
 
